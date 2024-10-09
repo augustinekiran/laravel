@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return 'test';
 });
+
+Route::resource('login', LoginController::class);
