@@ -20,10 +20,16 @@
                             <div class="mb-3">
                                 <label for="email" class="form-label">Username</label>
                                 <input type="text" class="form-control" name="username" value="{{ old('username') }}" placeholder="Enter username" required>
+                                @if ($errors->has('username'))
+                                <div class="ms-2 small text-danger">{{ $errors->first('username') }}</div>
+                                @endif
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
                                 <input type="password" class="form-control" name="password" placeholder="Password" required>
+                                @if ($errors->has('username'))
+                                <div class="ms-2 small text-danger">{{ $errors->first('password') }}</div>
+                                @endif
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Login</button>
                             @if (session('message'))

@@ -6,16 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
-class Form extends Model
+class Element extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'form_id',
+        'type',
+        'label',
+        'required',
+        'value',
+        'sequence',
+    ];
 
-    public function elements(): HasMany
+    public function options(): HasMany
     {
-        return $this->hasMany(Element::class);
+        return $this->hasMany(Option::class);
     }
 
-    protected function name(): Attribute
+    protected function label(): Attribute
     {
         return Attribute::make(
             set: fn(string $value) => ucwords($value),

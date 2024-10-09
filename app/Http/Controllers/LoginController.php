@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -13,6 +14,20 @@ class LoginController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'username' => 'required|min:4|max:40',
+            'password' => 'required|min:6|max:40',
+        ]);
+
+        $credentials = [
+            'username' => trim($request->username),
+            'password' => $request->password
+        ];
+
+        if (Auth::attempt($credentials)) {
+            return redirect()->route('dashboard.index');
+        }
+
         return redirect('login')->with('message', 'Invalid Credentials. Please try again.');
     }
 }
