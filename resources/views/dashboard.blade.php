@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 </head>
 
 <body>
@@ -23,10 +24,13 @@
                         Form {{ $key+1 }} - {{ $form->name }}
                     </button>
                 </h2>
-                <div id="collapseOne" class="accordion-collapse collapse {{ $key == 0 ? 'show' : ''}}" aria-labelledby="headingOne" data-bs-parent="#formAccordion">
+                @php
+                $class = $key == 0 ? 'show' : '';
+                @endphp
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#formAccordion">
                     <div class="accordion-body">
                         <div class="table-responsive">
-                            <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addElementModal">Add Element</button>
+                            <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addElementModal" onclick="setFormId('{{ $form->id }}')">Add Element</button>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -37,6 +41,7 @@
                                         <th>Required</th>
                                         <th>Sequence</th>
                                         <th>Options</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -49,6 +54,23 @@
                                         <td>{{ $element->required == 1 ? 'Yes' : 'No' }}</td>
                                         <td>{{ $element->sequence ?? 'Not set' }}</td>
                                         <td>
+                                            @if ($element->type == 'select')
+                                            <div class="d-flex align-items-center">
+                                                <select class="form-select" id="exampleSelect" aria-label="Select an Option">
+                                                    <option selected>-- Select --</option>
+                                                    @foreach ($element->options as $option)
+                                                    <option value="{{ $option->value }}">{{ $option->label }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <button class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#addOptionModal" onclick="setElementId('{{ $element->id }}')"><i class="bi bi-plus-circle"></i></button>
+                                            </div>
+                                            @else
+                                            N/A
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-warning"><i class="bi bi-pencil"></i></button>
+                                            <button class="btn btn-danger"><i class="bi bi-trash"></i></button>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -72,7 +94,7 @@
                 </div>
                 <form id="addElementForm" action="{{ route('element.create') }}" method="post">
                     @csrf
-                    <input type="hidden" name="form_id" value="1">
+                    <input type="hidden" name="form_id" id="form_id">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="elementLabel" class="form-label">Element Label</label>
@@ -117,10 +139,6 @@
                             <div class="ms-2 small text-danger">{{ $errors->first('sequence') }}</div>
                             @endif
                         </div>
-                        <div class="mb-3" id="optionsDiv" style="display: none;">
-                            <label for="elementOptions" class="form-label">Options (comma separated)</label>
-                            <input type="text" class="form-control" id="elementOptions" placeholder="Option1, Option2, Option3">
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -159,8 +177,52 @@
         </div>
     </div>
 
+    <!-- Modal for creating option -->
+    <div class="modal fade" id="addOptionModal" tabindex="-1" aria-labelledby="addOptionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addOptionModalLabel">Add New Option</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="addOptionForm" action="{{ route('option.create') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="element_id" id="element_id">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="optionLabel" class="form-label">Label</label>
+                            <input type="text" class="form-control" name="option_label" required>
+                            @if ($errors->has('option_label'))
+                            <div class="ms-2 small text-danger">{{ $errors->first('option_label') }}</div>
+                            @endif
+                        </div>
+                        <div class="mb-3">
+                            <label for="optionValue" class="form-label">Value</label>
+                            <input type="text" class="form-control" name="option_value" required>
+                            @if ($errors->has('option_value'))
+                            <div class="ms-2 small text-danger">{{ $errors->first('option_value') }}</div>
+                            @endif
+                        </div>
+                        <div class="mb-3">
+                            <label for="optionSequence" class="form-label">Sequence</label>
+                            <input type="number" class="form-control" name="option_sequence">
+                            @if ($errors->has('option_sequence'))
+                            <div class="ms-2 small text-danger">{{ $errors->first('option_sequence') }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="addOptionButton">Add Option</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         <?php
@@ -171,11 +233,29 @@
         ?>
 
         <?php
-        if ($errors->any() && !$errors->has('name')) {
+        if ($errors->any() && !$errors->has('name') && !$errors->has('option_label') && !$errors->has('option_value') && !$errors->has('option_sequence')) {
             echo 'var myModal = new bootstrap.Modal(document.getElementById("addElementModal"));';
             echo 'myModal.show();';
         }
         ?>
+
+        <?php
+        if ($errors->has('option_label') || $errors->has('option_value') || $errors->has('option_sequence')) {
+            echo 'var myModal = new bootstrap.Modal(document.getElementById("addOptionModal"));';
+            echo 'myModal.show();';
+        }
+        ?>
+
+        function setFormId(id) {
+            const element = document.getElementById('form_id');
+            element.value = id;
+        }
+
+        function setElementId(id) {
+            const element = document.getElementById('element_id');
+            element.value = id;
+        }
+
 
 
 
@@ -191,16 +271,6 @@
                 // Logic to delete the field goes here
             }
         }
-
-        // Show options input field when "Select" type is chosen
-        document.getElementById('elementType').addEventListener('change', function() {
-            const optionsDiv = document.getElementById('optionsDiv');
-            if (this.value === 'select') {
-                optionsDiv.style.display = 'block';
-            } else {
-                optionsDiv.style.display = 'none';
-            }
-        });
     </script>
 </body>
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Form;
 use App\Models\Element;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Option;
 
 class FormBuilderController extends Controller
 {
@@ -42,21 +42,25 @@ class FormBuilderController extends Controller
             'sequence' => $request->sequence ?? null,
         ]);
 
-        if ($request->type == 'select') {
-            $this->createOptions($request, $element->id);
-        }
-
         return redirect()->route('dashboard.index');
     }
 
-    private function createOptions(Request $request, $elementId)
+    public function createOption(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'credit_card_number' => 'required_if:payment_type,cc'
+        $request->validate([
+            'element_id' => 'required|numeric',
+            'option_label' => 'required|min:3|max:40',
+            'option_value' => 'required|min:1|max:40',
+            'option_sequence' => 'nullable|numeric',
         ]);
 
-        if (!$validator->fails()) {
-            //    
-        }
+        Option::create([
+            'element_id' => $request->element_id,
+            'label' => $request->option_label,
+            'value' => $request->option_value,
+            'sequence' => $request->option_sequence ?? null
+        ]);
+
+        return redirect()->route('dashboard.index');
     }
 }

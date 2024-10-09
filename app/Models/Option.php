@@ -9,7 +9,7 @@ class Option extends Model
 {
     protected $fillable = [
         'element_id',
-        'lable',
+        'label',
         'value',
         'sequence'
     ];

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('options', function (Blueprint $table) {
             $table->id();
             $table->foreignId('element_id')->constrained()->onDelete('cascade');
-            $table->string('lable');
+            $table->string('label');
             $table->string('value');
             $table->integer('sequence')->nullable();
             $table->timestamps();
