@@ -10,6 +10,7 @@ use App\Models\Option;
 use App\Models\FormSubmission;
 use App\Models\FormInput;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class FormBuilderController extends Controller
 {
@@ -34,7 +35,7 @@ class FormBuilderController extends Controller
         ]);
 
         if (isset($form->id)) {
-            SendFormCreatedMail::dispatch($form);
+            SendFormCreatedMail::dispatch($form, Auth::user());
         }
 
         return redirect()->route('dashboard.index');

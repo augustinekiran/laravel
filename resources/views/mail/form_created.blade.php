@@ -41,7 +41,7 @@
 
 <body>
     <div class="container">
-        <h1>Hello, {{ auth()->user()->name }}!</h1>
+        <h1>Hello, {{ $user->name }}!</h1>
         <p>Congratulations! You have successfully created a form named <strong>{{ $form->name }}</strong>.</p>
         <p><strong>Form Details:</strong></p>
         <ul>

@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Form;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -17,7 +18,7 @@ class FormCreatedMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public Form $form)
+    public function __construct(public Form $form, public User $user)
     {
         //
     }
@@ -40,7 +41,8 @@ class FormCreatedMail extends Mailable
         return new Content(
             view: 'mail.form_created',
             with: [
-                'form' => $this->form
+                'form' => $this->form,
+                'user' => $this->user
             ],
         );
     }
