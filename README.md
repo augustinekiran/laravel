@@ -20,26 +20,26 @@ Create dynamic form and allow data update
 
 ### Cache the Files
 ```bash
-  php artian cache:clear
+  php artisan cache:clear
 ```
 ```bash
-  php artian config:cache
+  php artisan config:cache
 ```
 ```bash
-  php artian view:cache
+  php artisan view:cache
 ```
 ```bash
-  php artian route:cache
+  php artisan route:cache
 ```
 
 ### Setup Queue Worker
 ```bash
-  php artian queue:work
+  php artisan queue:work
 ```
 
 ### Run the Development Server
 ```bash
-  php artian serve
+  php artisan serve
 ```
 
 ## Login to the Project
@@ -47,7 +47,7 @@ Create dynamic form and allow data update
 #### Login
 
 ```http
-  RouteUrl - '/'
+  http://localhost:8000/
 ```
 
 #### Credentials
