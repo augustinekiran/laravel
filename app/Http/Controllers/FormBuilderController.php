@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendFormCreatedMail;
 use Illuminate\Http\Request;
 use App\Models\Form;
 use App\Models\Element;
@@ -27,10 +28,14 @@ class FormBuilderController extends Controller
             $formPostValue++;
         } while ($slugExist);
 
-        Form::create([
+        $form = Form::create([
             'name' => $request->name,
             'slug' => $slug
         ]);
+
+        if (isset($form->id)) {
+            SendFormCreatedMail::dispatch($form);
+        }
 
         return redirect()->route('dashboard.index');
     }
