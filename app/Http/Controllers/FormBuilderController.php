@@ -70,6 +70,12 @@ class FormBuilderController extends Controller
         return redirect()->route('dashboard.index');
     }
 
+    public function deleteForm($formId)
+    {
+        Form::findOrFail($formId)->delete();
+        return redirect()->route('dashboard.index');
+    }
+
     public function createOption(Request $request)
     {
         $request->validate([

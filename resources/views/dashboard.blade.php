@@ -32,6 +32,10 @@
                         <div class="table-responsive">
                             <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addElementModal" onclick="setFormId('{{ $form->id }}')">Add Element</button>
                             <a class="ms-4" href="{{ route('form.show', ['form_slug' => $form->slug]) }}" target="_blank">Goto Form</a>
+
+                            @php $formDeleteRoute = route('form.delete', ['form_id' => $form->id]); @endphp
+                            <button class="btn btn-danger ms-4 mb-3" title="Delete Form" onclick="window.location.replace('{{ $formDeleteRoute }}')"><i class="bi bi-trash"></i></button>
+
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>

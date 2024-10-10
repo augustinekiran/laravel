@@ -15,6 +15,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('create-form', [FormBuilderController::class, 'createForm'])->name('form.create');
     Route::post('create-element', [FormBuilderController::class, 'createElement'])->name('element.create');
     Route::get('delete-element/{element_id}', [FormBuilderController::class, 'deleteElement'])->name('element.delete');
+    Route::get('delete-form/{form_id}', [FormBuilderController::class, 'deleteForm'])->name('form.delete');
     Route::post('create-option', [FormBuilderController::class, 'createOption'])->name('option.create');
     Route::get('edit-element/{element_id}', [FormBuilderController::class, 'editElement'])->name('element.edit');
     Route::post('update-element/{element_id}', [FormBuilderController::class, 'updateElement'])->name('element.update');
