@@ -15,7 +15,7 @@
                 <div class="card mt-5">
                     <div class="card-body">
                         <h3 class="card-title text-center mb-4">Login</h3>
-                        <form action="{{route('login.store')}}" method="post">
+                        <form action="{{route('login.attempt')}}" method="post">
                             @csrf
                             <div class="mb-3">
                                 <label for="email" class="form-label">Username</label>

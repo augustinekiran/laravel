@@ -20,9 +20,9 @@
             @foreach ($forms as $key => $form)
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <div class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                         Form {{ $key+1 }} - {{ $form->name }}
-                    </button>
+                    </div>
                 </h2>
                 @php
                 $class = $key == 0 ? 'show' : '';
@@ -31,6 +31,7 @@
                     <div class="accordion-body">
                         <div class="table-responsive">
                             <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addElementModal" onclick="setFormId('{{ $form->id }}')">Add Element</button>
+                            <a class="ms-4" href="{{ route('form.show', ['form_slug' => $form->slug]) }}" target="_blank">Goto Form</a>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -70,7 +71,8 @@
                                         </td>
                                         <td>
                                             <button class="btn btn-warning"><i class="bi bi-pencil"></i></button>
-                                            <button class="btn btn-danger"><i class="bi bi-trash"></i></button>
+                                            @php $deleteRoute = route('element.delete', ['element_id' => $element->id]); @endphp
+                                            <button class="btn btn-danger" onclick="window.location.replace('{{ $deleteRoute }}')"><i class="bi bi-trash"></i></button>
                                         </td>
                                     </tr>
                                     @endforeach

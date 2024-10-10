@@ -12,7 +12,7 @@ class LoginController extends Controller
         return view('login_form');
     }
 
-    public function store(Request $request)
+    public function attemptLogin(Request $request)
     {
         $request->validate([
             'username' => 'required|min:4|max:40',
@@ -28,6 +28,6 @@ class LoginController extends Controller
             return redirect()->route('dashboard.index');
         }
 
-        return redirect('login')->with('message', 'Invalid Credentials. Please try again.');
+        return redirect()->route('login')->with('message', 'Invalid Credentials. Please try again.');
     }
 }

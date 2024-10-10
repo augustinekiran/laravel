@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Form;
 use App\Models\Element;
 use App\Models\Option;
+use Illuminate\Support\Str;
 
 class FormBuilderController extends Controller
 {
@@ -15,8 +16,18 @@ class FormBuilderController extends Controller
             'name' => 'required|min:3|max:40'
         ]);
 
+        $slugExist = false;
+        $formPostValue = 0;
+
+        do {
+            $slug = Str::slug($request->name) . ($formPostValue != 0 ? "-$formPostValue" : '');
+            $slugExist = Form::where('slug', $slug)->exists();
+            $formPostValue++;
+        } while ($slugExist);
+
         Form::create([
-            'name' => $request->name
+            'name' => $request->name,
+            'slug' => $slug
         ]);
 
         return redirect()->route('dashboard.index');
@@ -45,6 +56,12 @@ class FormBuilderController extends Controller
         return redirect()->route('dashboard.index');
     }
 
+    public function deleteElement($elementId)
+    {
+        Element::findOrFail($elementId)->delete();
+        return redirect()->route('dashboard.index');
+    }
+
     public function createOption(Request $request)
     {
         $request->validate([
@@ -62,5 +79,16 @@ class FormBuilderController extends Controller
         ]);
 
         return redirect()->route('dashboard.index');
+    }
+
+    public function showForm($formSlug)
+    {
+        $form = Form::where('slug', $formSlug)->with('elements.options')->first();
+
+        if ($form) {
+            return view('show_form')->with('form', $form);
+        }
+
+        abort(404);
     }
 }
