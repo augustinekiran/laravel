@@ -144,4 +144,36 @@ class FormBuilderController extends Controller
 
         return redirect()->route('form.show', ['form_slug' => $request->form_slug])->with('error', 'Cannot submit form. Please try again.');
     }
+
+    public function editElement($elementId)
+    {
+        $element = Element::findOrFail($elementId);
+        return view('edit_element')->with('element', $element);
+    }
+
+    public function updateElement(Request $request, $elementId)
+    {
+        $request->validate([
+            'type' => 'required|min:3|max:40',
+            'label' => 'required|min:3|max:40',
+            'required' => 'required|boolean',
+            'value' => 'max:40',
+            'sequence' => 'nullable|numeric',
+        ]);
+
+        $updateArray = [
+            'type' => $request->type,
+            'label' => $request->label,
+            'required' => $request->required,
+            'value' => $request->value,
+            'sequence' => $request->sequence
+        ];
+
+        if ($request->type != 'select') {
+            Option::where('element_id', $elementId)->delete();
+        }
+
+        Element::findOrFail($elementId)->update($updateArray);
+        return redirect()->route('dashboard.index');
+    }
 }

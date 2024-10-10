@@ -70,7 +70,8 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <button class="btn btn-warning"><i class="bi bi-pencil"></i></button>
+                                            @php $editRoute = route('element.edit', ['element_id' => $element->id]); @endphp
+                                            <button class="btn btn-warning" onclick="window.location.replace('{{ $editRoute }}')"><i class="bi bi-pencil"></i></button>
                                             @php $deleteRoute = route('element.delete', ['element_id' => $element->id]); @endphp
                                             <button class="btn btn-danger" onclick="window.location.replace('{{ $deleteRoute }}')"><i class="bi bi-trash"></i></button>
                                         </td>
@@ -111,6 +112,7 @@
                                 <option value="" disabled selected>Select type</option>
                                 <option value="text">Text</option>
                                 <option value="email">Email</option>
+                                <option value="number">Number</option>
                                 <option value="select">Select</option>
                             </select>
                             @if ($errors->has('type'))
