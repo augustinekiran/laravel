@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LoginController::class, 'index'])->name('login');
 Route::post('login', [LoginController::class, 'attemptLogin'])->name('login.attempt');
 Route::get('form/{form_slug}', [FormBuilderController::class, 'showForm'])->name('form.show');
+Route::post('submit', [FormBuilderController::class, 'submitForm'])->name('form.submit');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard.index');
