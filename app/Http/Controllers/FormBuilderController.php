@@ -98,11 +98,16 @@ class FormBuilderController extends Controller
     public function showForm($formSlug)
     {
         $form = Form::where('slug', $formSlug)
-            ->with(['elements' => function ($query) {
-                $query->orderBy('sequence', 'asc')->orderBy('id', 'asc');
-            }, 'elements.options' => function ($query) {
-                $query->orderBy('sequence', 'asc')->orderBy('id', 'asc');
-            }])
+            ->with([
+                'elements' => function ($query) {
+                    $query->orderByRaw('ISNULL(sequence), sequence ASC') // nulls last, order by sequence
+                        ->orderBy('id', 'asc');  // if sequence is null, order by id
+                },
+                'elements.options' => function ($query) {
+                    $query->orderByRaw('ISNULL(sequence), sequence ASC') // nulls last, order by sequence
+                        ->orderBy('id', 'asc');  // if sequence is null, order by id
+                }
+            ])
             ->first();
 
         if ($form) {
