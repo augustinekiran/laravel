@@ -20,14 +20,14 @@
             @foreach ($forms as $key => $form)
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingOne">
-                    <div class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <div class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{{ $key+1 }}" aria-expanded="true" aria-controls="collapse_{{ $key+1 }}">
                         Form {{ $key+1 }} - {{ $form->name }}
                     </div>
                 </h2>
                 @php
                 $class = $key == 0 ? 'show' : '';
                 @endphp
-                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#formAccordion">
+                <div id="collapse_{{ $key+1 }}" class="accordion-collapse collapse {{ $key == 0 ? 'show' : '' }}" aria-labelledby="headingOne" data-bs-parent="#formAccordion">
                     <div class="accordion-body">
                         <div class="table-responsive">
                             <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addElementModal" onclick="setFormId('{{ $form->id }}')">Add Element</button>
@@ -258,22 +258,6 @@
         function setElementId(id) {
             const element = document.getElementById('element_id');
             element.value = id;
-        }
-
-
-
-
-        // JavaScript functions for Edit and Delete actions
-        function editField(fieldNumber) {
-            alert(`Edit field number: ${fieldNumber}`);
-            // Logic to edit the field goes here
-        }
-
-        function deleteField(fieldNumber) {
-            if (confirm(`Are you sure you want to delete field number: ${fieldNumber}?`)) {
-                alert(`Field number ${fieldNumber} deleted.`);
-                // Logic to delete the field goes here
-            }
         }
     </script>
 </body>
